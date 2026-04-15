@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Тест: Эффективное запоминание слов</title>
+    <style>
+        :root {
+            --primary: #4a90e2;
+            --success: #27ae60;
+            --secondary: #7f8c8d;
+            --bg: #f8f9fa;
+        }
+
+        body {
+            font-family: 'Helvetica Neue', Arial, sans-serif;
+            background-color: var(--bg);
+            color: #2c3e50;
+            line-height: 1.6;
+            margin: 0;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: white;
+            padding: 40px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+        }
+
+        h1 { text-align: center; color: var(--primary); margin-bottom: 10px; }
+        
+        .site-desc {
+            text-align: center;
+            font-size: 1.1rem;
+            color: #636e72;
+            margin-bottom: 30px;
+            padding: 0 20px;
+        }
+
+        .instructions {
+            background: #f1f7ff;
+            padding: 20px;
+            border-radius: 10px;
+            border-left: 4px solid var(--primary);
+            margin-bottom: 40px;
+        }
+
+        .question-block {
+            margin-bottom: 30px;
+            padding: 20px;
+            background: #fff;
+            border: 1px solid #edf2f7;
+            border-radius: 10px;
+        }
+
+        .question-text { font-weight: bold; font-size: 1.05rem; display: block; margin-bottom: 15px; }
+
+        .options { display: flex; justify-content: space-between; gap: 10px; }
+        .option-item { 
+            flex: 1; text-align: center; font-size: 0.8rem; cursor: pointer;
+            display: flex; flex-direction: column; align-items: center;
+        }
+
+        button.main-btn {
+            display: block; width: 100%; padding: 18px;
+            background: var(--primary); color: white; border: none;
+            border-radius: 10px; font-size: 1.2rem; cursor: pointer;
+            transition: transform 0.2s, background 0.3s;
+        }
+        button.main-btn:hover { background: #357abd; transform: translateY(-2px); }
+
+        /* Стили для результатов */
+        #result { display: none; }
+        
+        .top-cards-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-top: 25px;
+        }
+
+        .card {
+            background: white;
+            border: 2px solid #e1e8ed;
+            border-radius: 12px;
+            padding: 20px;
+            position: relative;
+            transition: border-color 0.3s;
+        }
+        .card.top { border-color: var(--success); background: #f0fff4; }
+        
+        .badge {
+            display: inline-block;
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+        .badge.top { background: var(--success); color: white; }
+        .badge.side { background: #dfe6e9; color: #636e72; }
+
+        .card h3 { margin: 0 0 10px 0; color: #2d3436; }
+        .card p { font-size: 0.9rem; color: #4b5563; margin-bottom: 10px; }
+        .card ul { padding-left: 20px; font-size: 0.85rem; }
+
+        .other-results { margin-top: 40px; border-top: 1px solid #eee; padding-top: 20px; }
+        
+        details {
+            background: #f8f9fa;
+            padding: 10px 20px;
+            border-radius: 8px;
+            margin-bottom: 10px;
+            cursor: pointer;
+        }
+        details summary { font-weight: bold; color: #636e72; }
+
+        @media (max-width: 600px) {
+            .options { flex-direction: column; }
+            .option-item { flex-direction: row; gap: 15px; padding: 5px 0; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>Продуктивные способы запоминания</h1>
+    <p class="site-desc">
+        С помощью этого теста вы сможете прорефлексировать свои способности в изучении английских слов и выражений и понять, как Вам лучше запоминать английскую лексику.
+    </p>
+    
+    <div id="quiz-section">
+        <div class="instructions">
+            <strong>Инструкция:</strong> Оцените уровень согласия: Не согласен (0) — Согласен (4). Нет правильных ответов, важна ваша честность.
+        </div>
+        <form id="quiz-form">
+            <div id="questions-container"></div>
+            <button type="submit" class="main-btn">Получить персональные рекомендации</button>
+        </form>
+    </div>
+
+    <div id="result">
+        <h2 style="text-align: center;">Ваш профиль обучения</h2>
+        
+        <div class="top-cards-container" id="top-results"></div>
+
+        <div class="other-results">
+            <h4 style="color: var(--secondary)">Остальные типы (Ситуативные):</h4>
+            <div id="bottom-results"></div>
+        </div>
+
+        <button onclick="location.reload()" class="main-btn" style="margin-top: 30px; background: #6c757d;">Пройти заново</button>
+    </div>
+</div>
+
+<script>
+    // Данные типов с описаниями и примерами
+    const typeInfo = {
+        "Визуальный": {
+            desc: "Вы лучше всего усваиваете информацию через зрительные образы.",
+            examples: ["Используйте карточки Quizlet с картинками", "Рисуйте Mind-maps для групп слов", "Выделяйте маркеры цветом по частям речи"]
+        },
+        "Фонетико-слуховой": {
+            desc: "Для вас критически важно слышать живую речь и произносить слова вслух.",
+            examples: ["Слушайте подкасты (BBC Learning English)", "Метод Shadowing (повторяйте за диктором)", "Записывайте слова на диктофон и слушайте"]
+        },
+        "Контекстно-смысловой": {
+            desc: "Вы не любите голые списки слов. Вам нужен смысл и живая среда.",
+            examples: ["Учите слова через примеры в словарях (Cambridge/Oxford)", "Читайте адаптированные книги", "Запоминайте фразы-сочетания (collocations)"]
+        },
+        "Ассоциативно-эмоциональный": {
+            desc: "Ваш мозг запоминает то, что вызвало улыбку или личный интерес.",
+            examples: ["Придумывайте смешные созвучия (метод мнемоники)", "Связывайте слова с личными историями", "Смотрите мемы и комедийные шоу на английском"]
+        },
+        "Кинестетико-активный": {
+            desc: "Вы учитесь в движении и через практику. «Сделал — запомнил».",
+            examples: ["Пишите слова от руки (прописывание)", "Используйте жесты, когда произносите глаголы", "Старайтесь сразу внедрить слово в разговор"]
+        },
+        "Логико-аналитический": {
+            desc: "Вам нужно понять «как это работает» изнутри.",
+            examples: ["Изучайте приставки и суффиксы (словообразование)", "Ведите четкие таблицы по грамматике", "Разбирайте этимологию (происхождение) слов"]
+        }
+    };
+
+    const questionsData = [
+        { id: 1, text: "Я лучше запоминаю слова, если вижу их на ярких карточках или в приложениях", type: "Визуальный" },
+        { id: 2, text: "Цветовое кодирование (разные цвета для глаголов/существ.) помогает мне", type: "Визуальный" },
+        { id: 3, text: "Я эффективнее учу слова с картинками или инфографикой", type: "Визуальный" },
+        { id: 4, text: "Mind-maps и таблицы — мой лучший способ организации слов", type: "Визуальный" },
+        { id: 5, text: "Я хорошо запоминаю звучание слова, услышав его пару раз", type: "Фонетико-слуховой" },
+        { id: 6, text: "Быстро усваиваю слова из подкастов или видео", type: "Фонетико-слуховой" },
+        { id: 7, text: "Проговаривание слов вслух — самый эффективный метод для меня", type: "Фонетико-слуховой" },
+        { id: 8, text: "Мне важно слышать произношение носителя для запоминания", type: "Фонетико-слуховой" },
+        { id: 9, text: "Учу слова только в предложениях, а не списками", type: "Контекстно-смысловой" },
+        { id: 10, text: "Запоминаю слово, когда встречаю его в разных ситуациях", type: "Контекстно-смысловой" },
+        { id: 11, text: "Мне помогает знание готовых фраз (фразовых глаголов, идиом)", type: "Контекстно-смысловой" },
+        { id: 12, text: "Легче запоминаю, когда понимаю контекст реального диалога", type: "Контекстно-смысловой" },
+        { id: 13, text: "Создаю личные ассоциации или образы к новым словам", type: "Ассоциативно-эмоциональный" },
+        { id: 14, text: "Связываю слова с эмоциями или личными историями", type: "Ассоциативно-эмоциональный" },
+        { id: 15, text: "Мемы и шутки помогают мне выучить сленг и лексику", type: "Ассоциативно-эмоциональный" },
+        { id: 16, text: "Если слово вызывает интерес или оно забавное, я его не забуду", type: "Ассоциативно-эмоциональный" },
+        { id: 17, text: "Лучше запоминаю слова, когда пишу их ручкой на бумаге", type: "Кинестетико-активный" },
+        { id: 18, text: "Живой разговор закрепляет слово лучше любой зубрежки", type: "Кинестетико-активный" },
+        { id: 19, text: "Эффективно учу через жесты или «разыгрывание» значений", type: "Кинестетико-активный" },
+        { id: 20, text: "Запоминаю, когда делаю упражнения или пишу свои предложения", type: "Кинестетико-активный" },
+        { id: 21, text: "Разбираю структуру: корень, приставки, суффиксы", type: "Логико-аналитический" },
+        { id: 22, text: "Люблю знать происхождение слова (этимологию)", type: "Логико-аналитический" },
+        { id: 23, text: "Системы словообразования — мой любимый способ", type: "Логико-аналитический" },
+        { id: 24, text: "Учу эффективно, когда вижу логику и систему в языке", type: "Логико-аналитический" }
+    ];
+
+    function shuffle(array) {
+        for (let i = array.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [array[i], array[j]] = [array[j], array[i]];
+        }
+    }
+
+    const container = document.getElementById('questions-container');
+    shuffle(questionsData);
+
+    questionsData.forEach((q, idx) => {
+        const div = document.createElement('div');
+        div.className = 'question-block';
+        div.innerHTML = `
+            <span class="question-text">${idx+1}. ${q.text}</span>
+            <div class="options">
+                ${[0,1,2,3,4].map(v => `
+                    <label class="option-item">
+                        <input type="radio" name="q${q.id}" value="${v}" required>
+                        ${v}
+                    </label>
+                `).join('')}
+            </div>
+        `;
+        container.appendChild(div);
+    });
+
+    document.getElementById('quiz-form').onsubmit = function(e) {
+        e.preventDefault();
+        const scores = {};
+        Object.keys(typeInfo).forEach(t => scores[t] = 0);
+
+        const formData = new FormData(this);
+        questionsData.forEach(q => {
+            scores[q.type] += parseInt(formData.get(`q${q.id}`));
+        });
+
+        const sorted = Object.entries(scores).sort((a,b) => b[1] - a[1]);
+        
+        document.getElementById('quiz-section').style.display = 'none';
+        document.getElementById('result').style.display = 'block';
+        window.scrollTo(0,0);
+
+        const topContainer = document.getElementById('top-results');
+        const bottomContainer = document.getElementById('bottom-results');
+
+        sorted.forEach((res, index) => {
+            const typeName = res[0];
+            const score = res[1];
+            const info = typeInfo[typeName];
+
+            if (index < 3) {
+                // Создаем карточку для топ-3
+                topContainer.innerHTML += `
+                    <div class="card top">
+                        <span class="badge top">Самый эффективный для Вас</span>
+                        <h3>${index + 1}. ${typeName}</h3>
+                        <p><strong>Баллы: ${score}</strong></p>
+                        <p>${info.desc}</p>
+                        <ul>${info.examples.map(ex => `<li>${ex}</li>`).join('')}</ul>
+                    </div>
+                `;
+            } else {
+                // Создаем раскрывающийся список для остальных
+                bottomContainer.innerHTML += `
+                    <details>
+                        <summary>${index + 1}. ${typeName} — ${score} баллов (Ситуативный)</summary>
+                        <div style="padding: 10px 0;">
+                            <p>${info.desc}</p>
+                            <ul>${info.examples.map(ex => `<li>${ex}</li>`).join('')}</ul>
+                        </div>
+                    </details>
+                `;
+            }
+        });
+    };
+</script>
+
+</body>
+</html>
