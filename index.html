@@ -3,289 +3,279 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Тест: Эффективное запоминание слов</title>
+    <title>Тест VARK: Как вы учите английский?</title>
     <style>
         :root {
-            --primary: #4a90e2;
-            --success: #27ae60;
-            --secondary: #7f8c8d;
-            --bg: #f8f9fa;
+            --v-color: #3498db;
+            --a-color: #e67e22;
+            --r-color: #2ecc71;
+            --k-color: #e74c3c;
+            --bg: #f4f7f6;
         }
 
         body {
-            font-family: 'Helvetica Neue', Arial, sans-serif;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             background-color: var(--bg);
-            color: #2c3e50;
+            color: #333;
             line-height: 1.6;
             margin: 0;
             padding: 20px;
         }
 
         .container {
-            max-width: 900px;
+            max-width: 850px;
             margin: 0 auto;
             background: white;
             padding: 40px;
-            border-radius: 15px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+            border-radius: 20px;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.1);
         }
 
-        h1 { text-align: center; color: var(--primary); margin-bottom: 10px; }
+        h1 { text-align: center; color: #2c3e50; margin-bottom: 10px; }
         
         .site-desc {
             text-align: center;
             font-size: 1.1rem;
-            color: #636e72;
-            margin-bottom: 30px;
-            padding: 0 20px;
-        }
-
-        .instructions {
-            background: #f1f7ff;
-            padding: 20px;
-            border-radius: 10px;
-            border-left: 4px solid var(--primary);
+            color: #7f8c8d;
             margin-bottom: 40px;
+            border-bottom: 1px solid #eee;
+            padding-bottom: 20px;
         }
 
         .question-block {
-            margin-bottom: 30px;
-            padding: 20px;
+            margin-bottom: 35px;
+            padding: 25px;
             background: #fff;
-            border: 1px solid #edf2f7;
-            border-radius: 10px;
-        }
-
-        .question-text { font-weight: bold; font-size: 1.05rem; display: block; margin-bottom: 15px; }
-
-        .options { display: flex; justify-content: space-between; gap: 10px; }
-        .option-item { 
-            flex: 1; text-align: center; font-size: 0.8rem; cursor: pointer;
-            display: flex; flex-direction: column; align-items: center;
-        }
-
-        button.main-btn {
-            display: block; width: 100%; padding: 18px;
-            background: var(--primary); color: white; border: none;
-            border-radius: 10px; font-size: 1.2rem; cursor: pointer;
-            transition: transform 0.2s, background 0.3s;
-        }
-        button.main-btn:hover { background: #357abd; transform: translateY(-2px); }
-
-        /* Стили для результатов */
-        #result { display: none; }
-        
-        .top-cards-container {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 20px;
-            margin-top: 25px;
-        }
-
-        .card {
-            background: white;
-            border: 2px solid #e1e8ed;
+            border: 1px solid #e1e8ed;
             border-radius: 12px;
-            padding: 20px;
-            position: relative;
-            transition: border-color 0.3s;
+            transition: all 0.3s ease;
         }
-        .card.top { border-color: var(--success); background: #f0fff4; }
-        
-        .badge {
-            display: inline-block;
-            padding: 4px 10px;
-            border-radius: 20px;
+
+        .question-block:hover { border-color: #3498db; box-shadow: 0 5px 15px rgba(0,0,0,0.05); }
+
+        .question-text { font-weight: 600; font-size: 1.1rem; display: block; margin-bottom: 20px; }
+
+        .options-row {
+            display: flex;
+            justify-content: space-between;
+            gap: 5px;
+        }
+
+        .option-label {
+            flex: 1;
+            text-align: center;
             font-size: 0.75rem;
-            font-weight: bold;
-            margin-bottom: 10px;
+            cursor: pointer;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 8px;
+            color: #7f8c8d;
         }
-        .badge.top { background: var(--success); color: white; }
-        .badge.side { background: #dfe6e9; color: #636e72; }
 
-        .card h3 { margin: 0 0 10px 0; color: #2d3436; }
-        .card p { font-size: 0.9rem; color: #4b5563; margin-bottom: 10px; }
-        .card ul { padding-left: 20px; font-size: 0.85rem; }
+        .option-label input { width: 18px; height: 18px; cursor: pointer; }
 
-        .other-results { margin-top: 40px; border-top: 1px solid #eee; padding-top: 20px; }
+        .main-btn {
+            display: block; width: 100%; padding: 20px;
+            background: #2c3e50; color: white; border: none;
+            border-radius: 12px; font-size: 1.2rem; cursor: pointer;
+            transition: background 0.3s; margin-top: 20px;
+        }
+        .main-btn:hover { background: #34495e; }
+
+        /* Стили результатов */
+        #result-section { display: none; }
         
-        details {
-            background: #f8f9fa;
-            padding: 10px 20px;
-            border-radius: 8px;
-            margin-bottom: 10px;
+        .winner-card {
+            background: #fff;
+            border-top: 8px solid;
+            border-radius: 15px;
+            padding: 30px;
+            margin-bottom: 30px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.05);
+        }
+
+        .combine-title {
+            text-align: center;
+            color: #95a5a6;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            font-size: 0.9rem;
+            margin: 40px 0 20px;
+        }
+
+        .secondary-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+        }
+
+        .secondary-card {
+            background: #fdfdfd;
+            border: 1px solid #eee;
+            border-radius: 10px;
+            padding: 15px;
             cursor: pointer;
         }
-        details summary { font-weight: bold; color: #636e72; }
+
+        .type-tag {
+            display: inline-block;
+            padding: 3px 10px;
+            border-radius: 5px;
+            color: white;
+            font-weight: bold;
+            font-size: 0.8rem;
+            margin-bottom: 10px;
+        }
+
+        ul { padding-left: 20px; margin: 10px 0; }
+        li { margin-bottom: 5px; }
 
         @media (max-width: 600px) {
-            .options { flex-direction: column; }
-            .option-item { flex-direction: row; gap: 15px; padding: 5px 0; }
+            .options-row { flex-direction: column; gap: 12px; }
+            .option-label { flex-direction: row; text-align: left; font-size: 0.9rem; }
         }
     </style>
 </head>
 <body>
 
 <div class="container">
-    <h1>Продуктивные способы запоминания английских слов и выражений</h1>
+    <h1>Типы запоминания лексики (VARK)</h1>
     <p class="site-desc">
-        С помощью этого теста вы сможете прорефлексировать свои способности в изучении английских слов и выражений и понять, как Вам лучше запоминать английскую лексику.
+        С помощью этого теста вы сможете прорефлексировать свои способности в изучении английских слов и выражений и понять, как Вам лучше запоминать лексику на основе модели VARK.
     </p>
     
-    <div id="quiz-section">
-        <div class="instructions">
-            <strong>Инструкция:</strong> Оцените уровень согласия: Не согласен (0) — Согласен (4). Нет правильных ответов, важна ваша честность.
-        </div>
-        <form id="quiz-form">
-            <div id="questions-container"></div>
-            <button type="submit" class="main-btn">Получить персональные рекомендации</button>
+    <div id="quiz-ui">
+        <form id="vark-form">
+            <div id="questions-wrapper"></div>
+            <button type="submit" class="main-btn">Показать мой профиль обучения</button>
         </form>
     </div>
 
-    <div id="result">
-        <h2 style="text-align: center;">Ваш профиль обучения</h2>
-        
-        <div class="top-cards-container" id="top-results"></div>
-
-        <div class="other-results">
-            <h4 style="color: var(--secondary)">Остальные типы (Ситуативные):</h4>
-            <div id="bottom-results"></div>
-        </div>
-
-        <button onclick="location.reload()" class="main-btn" style="margin-top: 30px; background: #6c757d;">Пройти заново</button>
+    <div id="result-section">
+        <div id="winner-output"></div>
+        <div class="combine-title">Можно комбинировать с:</div>
+        <div class="secondary-grid" id="others-output"></div>
+        <button onclick="location.reload()" class="main-btn" style="background: #95a5a6; margin-top: 40px;">Пройти тест заново</button>
     </div>
 </div>
 
 <script>
-    // Данные типов с описаниями и примерами
-    const typeInfo = {
-        "Визуальный": {
-            desc: "Ваш мозг лучше всего фиксирует информацию, которая имеет четкую графическую форму, цвет или пространственное расположение. Если вы не видели, как слово пишется, вам трудно его запомнить на слух.",
-            examples: ["Используйте приложения вроде *Quizlet* или *Anki*, обязательно добавляя к словам яркие картинки-ассоциации.", "Рисуйте Mind-maps для большой темы или групп слов", "Выделяйте маркеры цветом по частям речи"]
+    const content = {
+        "V": {
+            name: "Визуальный (Visual)",
+            color: "#3498db",
+            desc: "Вы лучше всего усваиваете информацию через зрительные образы, графику и пространственные связи.",
+            methods: ["Использование карточек с картинками", "Создание интеллект-карт (Mind-maps)", "Цветовое кодирование частей речи", "Просмотр видео с инфографикой"]
         },
-        "Аудиальный": {
-            desc: "Для вас английский язык — это прежде всего музыка и ритм. Вы обладаете чутким слухом к интонациям и акцентам. Вы можете не помнить, как пишется слово, но точно помните, «как оно звучало» в фильме или песне",
-            examples: ["Слушайте подкасты", "Слушайте речь и повторяйте за диктором", "Составь небольшой текст на аглийском на любую теме и записывай на диктофон и слушай, как ты проговариваешь свой монолог. С каждым разом результат будет становиться лучше"]
+        "A": {
+            name: "Аудиальный (Auditory)",
+            color: "#e67e22",
+            desc: "Для вас эффективнее всего слушать, обсуждать и проговаривать информацию вслух.",
+            methods: ["Метод Shadowing (повтор за диктором)", "Прослушивание подкастов", "Обсуждение слов в паре/группе", "Запись своей речи на диктофон"]
         },
-        "Контекстно-смысловой": {
-            desc: "Ваш мозг отказывается запоминать информацию, если она не встроена в живую ситуацию. Вам важно понимать не только перевод, но и как новое слово взаимодействует с другими.",
-            examples: ["Учите слова через примеры в словарях (Cambridge/Oxford)", "Читайте посты в соцсетях, статьи или короткие рассказы в оригинале"]
+        "R": {
+            name: "Чтение/Письмо (Read/Write)",
+            color: "#2ecc71",
+            desc: "Вы предпочитаете работать с печатным словом: списками, словарями и конспектами.",
+            methods: ["Ведение бумажного словаря", "Чтение статей и книг", "Многократное прописывание слов", "Составление письменных предложений"]
         },
-        "Ассоциативно-эмоциональный": {
-            desc: " Ваша память работает на «топливе» из эмоций. Если слово вызвало у вас смех, любопытство или даже легкое раздражение — оно останется с вами навсегда. Вы учитесь через чувства и личные истории.",
-            examples: ["Ищите шутки и мемы на английском с нужной лексикой.", "Связывайте слова с личными историями", "Составляйте предложения о себе, своих друзьях или мечтах. Слово, связанное с вашей жизнью, запоминается быстрее."]
-        },
-        "Кинестетико-активный": {
-            desc: " Вы познаете мир через действие. Вам трудно долго сидеть на месте над учебником. Вашему мозгу нужно «потрогать» информацию или пропустить её через мышечную активность.",
-            examples: ["Пишите слова от руки (прописывание)", "Используйте жесты, когда произносите глаголы", "Старайтесь сразу внедрить слово в разговор"]
-        },
-        "Логико-аналитический": {
-            desc: " Вы — исследователь. Вам недостаточно знать перевод, вам нужно понять, как устроено слово. Вам нравится видеть в языке логику, правила и закономерности.",
-            examples: ["Изучайте приставки и суффиксы (словообразование)", "Ведите четкие таблицы по грамматике", "Интересуйтесь этимологию (происхождение) слов"]
+        "K": {
+            name: "Кинестетический (Kinesthetic)",
+            color: "#e74c3c",
+            desc: "Ваш мозг запоминает через действия, практику, физические ощущения и личный опыт.",
+            methods: ["Использование жестов (метод TPR)", "Карточки, которые можно перекладывать", "Применение слов в живой ситуации", "Обучение во время движения/прогулки"]
         }
     };
 
-    const questionsData = [
-        { id: 1, text: "Я лучше запоминаю слова, если вижу их на картинках", type: "Визуальный" },
-        { id: 2, text: "Я делаю пометки в тексте, могу использовать цветные маркеры, это помогает мне", type: "Визуальный" },
-        { id: 3, text: "Мне помогает учить слова по карточкам с картиками", type: "Визуальный" },
-        { id: 4, text: "Mind-maps и таблицы — хороший способ организации слов", type: "Визуальный" },
-        { id: 5, text: "Я хорошо запоминаю звучание слова, услышав его пару раз", type: "Фонетико-слуховой" },
-        { id: 6, text: "Быстро усваиваю слова из подкастов или видео", type: "Фонетико-слуховой" },
-        { id: 7, text: "Проговаривание слов вслух — самый эффективный метод для меня", type: "Фонетико-слуховой" },
-        { id: 8, text: "Мне важно слышать произношение носителя для запоминания", type: "Фонетико-слуховой" },
-        { id: 9, text: "Учу слова только в предложениях, а не списками", type: "Контекстно-смысловой" },
-        { id: 10, text: "Запоминаю слово, когда встречаю его в разных ситуациях", type: "Контекстно-смысловой" },
-        { id: 11, text: "Мне помогает знание готовых фраз (фразовых глаголов, идиом)", type: "Контекстно-смысловой" },
-        { id: 12, text: "Легче запоминаю, когда понимаю контекст реального диалога", type: "Контекстно-смысловой" },
-        { id: 13, text: "Создаю личные ассоциации или образы к новым словам", type: "Ассоциативно-эмоциональный" },
-        { id: 14, text: "Связываю слова с эмоциями или личными историями", type: "Ассоциативно-эмоциональный" },
-        { id: 15, text: "Мемы и шутки помогают мне выучить сленг и лексику", type: "Ассоциативно-эмоциональный" },
-        { id: 16, text: "Если слово вызывает интерес или оно забавное, я его не забуду", type: "Ассоциативно-эмоциональный" },
-        { id: 17, text: "Лучше запоминаю слова, когда пишу их ручкой на бумаге", type: "Кинестетико-активный" },
-        { id: 18, text: "Живой разговор закрепляет слово лучше любой зубрежки", type: "Кинестетико-активный" },
-        { id: 19, text: "Я могу активно жестикулировать, уча слова", type: "Кинестетико-активный" },
-        { id: 20, text: "Запоминаю, когда делаю упражнения или пишу свои предложения", type: "Кинестетико-активный" },
-        { id: 21, text: "Разбираю структуру: корень, приставки, суффиксы", type: "Логико-аналитический" },
-        { id: 22, text: "Люблю знать происхождение слова (этимологию)", type: "Логико-аналитический" },
-        { id: 23, text: "Таблицы словообразования, грамматики — мой любимый способ", type: "Логико-аналитический" },
-        { id: 24, text: "Учу эффективно, когда вижу логику и систему в языке", type: "Логико-аналитический" }
+    const questions = [
+        { id: 1, type: "V", text: "Я лучше запоминаю слово, если вижу его рядом с яркой иллюстрацией." },
+        { id: 2, type: "V", text: "Цветовые маркеры помогают мне лучше структурировать записи." },
+        { id: 3, type: "V", text: "Мне легче учить слова через схемы и ментальные карты." },
+        { id: 4, type: "V", text: "Я легко вспоминаю, как слово выглядело на странице учебника." },
+        { id: 5, type: "A", text: "Я быстро усваиваю слова из песен, подкастов или видео." },
+        { id: 6, type: "A", text: "Проговаривание слов вслух — самый эффективный способ для меня." },
+        { id: 7, type: "A", text: "Мне легче запомнить фразу, если я уловлю её ритм или интонацию." },
+        { id: 8, type: "A", text: "Я часто повторяю слова за диктором, чтобы закрепить их в памяти." },
+        { id: 9, type: "R", text: "Я лучше запоминаю слова через текстовые определения в словаре." },
+        { id: 10, type: "R", text: "Ведение классического словаря — мой основной метод." },
+        { id: 11, type: "R", text: "Чтобы выучить слово, мне нужно прописать его несколько раз." },
+        { id: 12, type: "R", text: "Я предпочитаю учить лексику, читая статьи или субтитры." },
+        { id: 13, type: "K", text: "Я эффективнее запоминаю глаголы, если сопровождаю их жестами." },
+        { id: 14, type: "K", text: "Мне важно сразу применить слово в живой ситуации (в магазине, в диалоге)." },
+        { id: 15, type: "K", text: "Работа с бумажными карточками, которые можно трогать, помогает мне лучше приложений." },
+        { id: 16, type: "K", text: "Я лучше запоминаю слова, когда учу их во время прогулки или движения." }
     ];
 
-    function shuffle(array) {
-        for (let i = array.length - 1; i > 0; i--) {
-            const j = Math.floor(Math.random() * (i + 1));
-            [array[i], array[j]] = [array[j], array[i]];
-        }
-    }
+    function shuffle(arr) { return arr.sort(() => Math.random() - 0.5); }
 
-    const container = document.getElementById('questions-container');
-    shuffle(questionsData);
+    const wrapper = document.getElementById('questions-wrapper');
+    const scale = [
+        "Совершенно не согласен",
+        "Скорее не согласен",
+        "Иногда верно",
+        "Скорее согласен",
+        "Полностью согласен"
+    ];
 
-    questionsData.forEach((q, idx) => {
-        const div = document.createElement('div');
-        div.className = 'question-block';
-        div.innerHTML = `
+    shuffle(questions).forEach((q, idx) => {
+        const qDiv = document.createElement('div');
+        qDiv.className = 'question-block';
+        qDiv.innerHTML = `
             <span class="question-text">${idx+1}. ${q.text}</span>
-            <div class="options">
-                ${[0,1,2,3,4].map(v => `
-                    <label class="option-item">
-                        <input type="radio" name="q${q.id}" value="${v}" required>
-                        ${v}
+            <div class="options-row">
+                ${scale.map((label, val) => `
+                    <label class="option-label">
+                        <input type="radio" name="q${q.id}" value="${val}" required>
+                        <span>${label}</span>
                     </label>
                 `).join('')}
             </div>
         `;
-        container.appendChild(div);
+        wrapper.appendChild(qDiv);
     });
 
-    document.getElementById('quiz-form').onsubmit = function(e) {
+    document.getElementById('vark-form').onsubmit = function(e) {
         e.preventDefault();
-        const scores = {};
-        Object.keys(typeInfo).forEach(t => scores[t] = 0);
+        const scores = { V: 0, A: 0, R: 0, K: 0 };
+        const data = new FormData(this);
 
-        const formData = new FormData(this);
-        questionsData.forEach(q => {
-            scores[q.type] += parseInt(formData.get(`q${q.id}`));
+        questions.forEach(q => {
+            scores[q.type] += parseInt(data.get(`q${q.id}`));
         });
 
-        const sorted = Object.entries(scores).sort((a,b) => b[1] - a[1]);
+        const sorted = Object.entries(scores).sort((a, b) => b[1] - a[1]);
         
-        document.getElementById('quiz-section').style.display = 'none';
-        document.getElementById('result').style.display = 'block';
-        window.scrollTo(0,0);
+        document.getElementById('quiz-ui').style.display = 'none';
+        document.getElementById('result-section').style.display = 'block';
+        window.scrollTo(0, 0);
 
-        const topContainer = document.getElementById('top-results');
-        const bottomContainer = document.getElementById('bottom-results');
+        const winner = sorted[0];
+        const winnerInfo = content[winner[0]];
+        
+        document.getElementById('winner-output').innerHTML = `
+            <div class="winner-card" style="border-color: ${winnerInfo.color}">
+                <span class="type-tag" style="background: ${winnerInfo.color}">Ваш основной тип</span>
+                <h2 style="margin: 10px 0;">${winnerInfo.name} — ${winner[1]} баллов</h2>
+                <p>${winnerInfo.desc}</p>
+                <p><strong>Рекомендуемые методы:</strong></p>
+                <ul>${winnerInfo.methods.map(m => `<li>${m}</li>`).join('')}</ul>
+            </div>
+        `;
 
-        sorted.forEach((res, index) => {
-            const typeName = res[0];
-            const score = res[1];
-            const info = typeInfo[typeName];
-
-            if (index < 3) {
-                // Создаем карточку для топ-3
-                topContainer.innerHTML += `
-                    <div class="card top">
-                        <span class="badge top">Самый эффективный для Вас</span>
-                        <h3>${index + 1}. ${typeName}</h3>
-                        <p><strong>Баллы: ${score}</strong></p>
-                        <p>${info.desc}</p>
-                        <ul>${info.examples.map(ex => `<li>${ex}</li>`).join('')}</ul>
-                    </div>
-                `;
-            } else {
-                // Создаем раскрывающийся список для остальных
-                bottomContainer.innerHTML += `
-                    <details>
-                        <summary>${index + 1}. ${typeName} — ${score} баллов (Ситуативный)</summary>
-                        <div style="padding: 10px 0;">
-                            <p>${info.desc}</p>
-                            <ul>${info.examples.map(ex => `<li>${ex}</li>`).join('')}</ul>
-                        </div>
+        const othersBox = document.getElementById('others-output');
+        sorted.slice(1).forEach(item => {
+            const info = content[item[0]];
+            othersBox.innerHTML += `
+                <div class="secondary-card">
+                    <span class="type-tag" style="background: #95a5a6">${info.name}</span>
+                    <p style="font-size: 0.85rem; margin: 5px 0;"><strong>Баллы: ${item[1]}</strong></p>
+                    <details style="font-size: 0.85rem;">
+                        <summary>Показать методы</summary>
+                        <ul>${info.methods.map(m => `<li>${m}</li>`).join('')}</ul>
                     </details>
-                `;
-            }
+                </div>
+            `;
         });
     };
 </script>
